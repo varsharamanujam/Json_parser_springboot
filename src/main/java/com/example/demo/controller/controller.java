@@ -1,16 +1,16 @@
-package com.example.demo.controller;
+package raw_nyc_web.controller;
 
-
-import com.example.demo.controller.models.Concert;
-import com.example.demo.controller.models.Program;
-import com.example.demo.controller.models.Root;
-import com.example.demo.controller.models.Work;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import raw_nyc_web.model.Concert;
+import raw_nyc_web.model.Program;
+import raw_nyc_web.model.Root;
+import raw_nyc_web.model.Work;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,16 +28,7 @@ class controller {
     controller() throws IOException {
     }
 
-
-    @RequestMapping("/hello")
-    @ResponseBody
-    public int hello() {
-        int count = 0;
-        count = (int) root.programs.stream().filter(x->x.programID>10000).count();
-        return count;
-    }
-
-    @RequestMapping("/hello1")
+    @RequestMapping("/orchestra")
     @ResponseBody
     public static ArrayList<String> hello1() {
         ArrayList<String> prog = new ArrayList<String>();
@@ -45,14 +36,16 @@ class controller {
         return prog;
     }
 
-    @RequestMapping("/hello2/{id}")
+    @RequestMapping("/number_of_programID_greater_than/{id}")
     @ResponseBody
-    public String hello2(@PathVariable int id ) {
-        Program count = root.programs.get(id);
-        return count.id;
+    public int hello(@PathVariable int id ) {
+        int count = 0;
+        count = (int) root.programs.stream().filter(x->x.programID>id).count();
+        return count;
     }
 
-    @RequestMapping("/hello3/{id}")
+
+    @RequestMapping(value = "/concerts_of_the_season/{id}", method = RequestMethod.POST)
     @ResponseBody
     public List<Concert> hello3(@PathVariable String id )  {
         List<Concert> ret = new ArrayList<Concert>();
@@ -61,12 +54,12 @@ class controller {
             {
                 ret.addAll(p.concerts) ;
             }
-            System.out.println(id+" "+p.season);
+            //System.out.println(id+" "+p.season);
         }
         return ret;
     }
 
-    @RequestMapping("/hello4/{id}")
+    @RequestMapping("/concerts_of_workID/{id}")
     @ResponseBody
     public List<Concert> hello4(@PathVariable String id )  {
         List<Concert> ret = new ArrayList<Concert>();
@@ -77,13 +70,13 @@ class controller {
                     ret.addAll(p.concerts) ;
                     break;
                 }
-                System.out.println(id+" "+p.season);
+                //System.out.println(id+" "+p.season);
             }
         }
         return ret;
     }
 
-    @RequestMapping("/hello5/{id}")
+    @RequestMapping("/venues_at_the_composer_performed/{id}")
     @ResponseBody
     public Set<String> hello5(@PathVariable String id )  {
         Set<String> s = new HashSet<String>();
